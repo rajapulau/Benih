@@ -19,7 +19,6 @@ package id.zelory.benih.ui.adapter.viewholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static id.zelory.benih.ui.adapter.BenihRecyclerAdapter.OnItemClickListener;
@@ -42,7 +41,6 @@ public abstract class BenihItemViewHolder<Data> extends RecyclerView.ViewHolder 
 
     public BenihItemViewHolder(View itemView, OnItemClickListener itemClickListener, OnLongItemClickListener longItemClickListener) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
         Timber.tag(getClass().getSimpleName());
         this.itemClickListener = itemClickListener;
         this.longItemClickListener = longItemClickListener;

@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.zelory.benih.ui.adapter.viewholder.BenihListViewHolder;
-import id.zelory.benih.util.BenihWorker;
-import rx.functions.Action1;
 import timber.log.Timber;
 
 /**
@@ -109,21 +107,8 @@ public abstract class BenihListAdapter<Data, Holder extends BenihListViewHolder>
     }
 
     public void add(final List<Data> items) {
-        final int size = items.size();
-        BenihWorker.pluck()
-                .doInComputation(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < size; i++) {
-                            data.add(items.get(i));
-                        }
-                    }
-                }).subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                notifyDataSetChanged();
-            }
-        });
+        data.addAll(items);
+        notifyDataSetChanged();
     }
 
     public void addOrUpdate(Data item) {
@@ -138,26 +123,22 @@ public abstract class BenihListAdapter<Data, Holder extends BenihListViewHolder>
 
     public void addOrUpdate(final List<Data> items) {
         final int size = items.size();
-        BenihWorker.pluck()
-                .doInComputation(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < size; i++) {
-                            Data item = items.get(i);
-                            int x = data.indexOf(item);
-                            if (x >= 0) {
-                                data.set(x, item);
-                            } else {
-                                add(item);
-                            }
-                        }
-                    }
-                }).subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                notifyDataSetChanged();
+        for (int i = 0; i < size; i++) {
+            Data item = items.get(i);
+            int x = data.indexOf(item);
+            if (x >= 0) {
+                data.set(x, item);
+            } else {
+                data.add(item);
             }
-        });
+        }
+        notifyDataSetChanged();
+    }
+
+    public void refreshWithData(List<Data> items) {
+        data.clear();
+        data.addAll(items);
+        notifyDataSetChanged();
     }
 
     public void remove(int position) {

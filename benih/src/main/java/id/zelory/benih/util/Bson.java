@@ -19,9 +19,6 @@ package id.zelory.benih.util;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.bind.DateTypeAdapter;
-
-import java.util.Date;
 
 /**
  * Created on : December 09, 2015
@@ -38,8 +35,7 @@ public enum Bson {
     Bson() {
         parser = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setPrettyPrinting()
-                .registerTypeAdapter(Date.class, new DateTypeAdapter())
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .create();
     }
 

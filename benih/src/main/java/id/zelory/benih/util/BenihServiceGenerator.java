@@ -16,11 +16,10 @@
 
 package id.zelory.benih.util;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import id.zelory.benih.util.Bson;
 import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
@@ -35,16 +34,10 @@ import retrofit.mime.TypedByteArray;
  * LinkedIn   : https://id.linkedin.com/in/zetbaitsu
  */
 public class BenihServiceGenerator {
-    public static <S> S createService(Class<S> serviceClass, String baseUrl) {
+    public static <S> S createService(Class<S> serviceClass, String baseUrl, RestAdapter.LogLevel logLevel) {
         RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
+                .setLogLevel(logLevel)
                 .setConverter(new GsonConverter(Bson.pluck().getParser()))
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("Authorization", "Token token=VrlpjCYILseTFuBbRtVN2w");
-                    }
-                })
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError cause) {
@@ -52,12 +45,12 @@ public class BenihServiceGenerator {
                             String json = new String(((TypedByteArray) cause.getResponse().getBody()).getBytes());
                             try {
                                 JSONObject object = new JSONObject(json);
-                                return new Throwable(object.getJSONObject("data").getString("message"));
-                            } catch (Exception e) {
-                                return cause;
+                                return new Throwable(object.getString("message"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         } else if (cause.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                            return new Throwable("Can't connect to server, please check your internet connection!");
+                            return new Throwable("Please check your internet connection!");
                         }
                         return cause;
                     }

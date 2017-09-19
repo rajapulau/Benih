@@ -18,7 +18,6 @@ package id.zelory.benih.ui.adapter.viewholder;
 
 import android.view.View;
 
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -31,7 +30,6 @@ import timber.log.Timber;
  */
 public abstract class BenihListViewHolder<Data> {
     public BenihListViewHolder(View itemView) {
-        ButterKnife.bind(this, itemView);
         Timber.tag(getClass().getSimpleName());
     }
 

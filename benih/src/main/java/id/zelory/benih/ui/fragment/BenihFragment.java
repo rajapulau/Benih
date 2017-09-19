@@ -17,7 +17,6 @@
 package id.zelory.benih.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -27,8 +26,6 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import id.zelory.benih.ui.BenihActivity;
 import timber.log.Timber;
 
@@ -40,13 +37,7 @@ import timber.log.Timber;
  * GitHub     : https://github.com/zetbaitsu
  * LinkedIn   : https://id.linkedin.com/in/zetbaitsu
  */
-public abstract class BenihFragment<Data extends Parcelable> extends RxFragment {
-    protected Data data;
-    private Unbinder unbinder;
-
-    public BenihFragment() {
-
-    }
+public abstract class BenihFragment extends RxFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,25 +49,13 @@ public abstract class BenihFragment<Data extends Parcelable> extends RxFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(getResourceLayout(), container, false);
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            data = savedInstanceState.getParcelable("data");
-        }
         onViewReady(savedInstanceState);
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public Data getData() {
-        return data;
     }
 
     protected abstract int getResourceLayout();
@@ -84,48 +63,8 @@ public abstract class BenihFragment<Data extends Parcelable> extends RxFragment 
     protected abstract void onViewReady(@Nullable Bundle savedInstanceState);
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable("data", data);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        data = null;
-        super.onDestroy();
-    }
-
-    public void replace(int containerId, BenihFragment fragment, boolean addToBackStack) {
-        if (addToBackStack) {
-            getFragmentManager().beginTransaction()
-                    .replace(containerId, fragment, fragment.getClass().getSimpleName())
-                    .addToBackStack(null)
-                    .commit();
-        } else {
-            getFragmentManager().beginTransaction()
-                    .replace(containerId, fragment, fragment.getClass().getSimpleName())
-                    .commit();
-        }
-    }
-
-    public void replace(int containerId, BenihFragment fragment, boolean addToBackStack, int transitionStyle) {
-        if (addToBackStack) {
-            getFragmentManager().beginTransaction()
-                    .replace(containerId, fragment, fragment.getClass().getSimpleName())
-                    .setTransitionStyle(transitionStyle)
-                    .commit();
-        } else {
-            getFragmentManager().beginTransaction()
-                    .replace(containerId, fragment, fragment.getClass().getSimpleName())
-                    .setTransitionStyle(transitionStyle)
-                    .commit();
-        }
     }
 
     protected ActionBar getSupportActionBar() {

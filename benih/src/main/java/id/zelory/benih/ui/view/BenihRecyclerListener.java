@@ -100,5 +100,15 @@ public abstract class BenihRecyclerListener extends RecyclerView.OnScrollListene
         }
     }
 
+    public void reset() {
+        previousTotal = 0;
+        loading = true;
+        visibleThreshold = 3;
+        firstVisibleItem = 0;
+        visibleItemCount = 0;
+        totalItemCount = 0;
+        currentPage = 0;
+    }
+
     public abstract void onLoadMore(int currentPage);
 }
